@@ -4,8 +4,9 @@
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>Page Title</title>
-    <link rel="stylesheet" href="css/styles.css">
+    
     <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <div class="box" id="heading">
@@ -14,15 +15,17 @@
    <div class="box">
       
     <% for(var i=0;i<items.length;i++){%>
+        <form action="/delete" method="POST">
         <div class="items">
-            <input type="checkbox" name="" id="">
-        <p> <%=items[i]%></p>
+            <input type="checkbox" name="checkbox" value="<%=items[i]._id%>" id="" onchange="this.form.submit()">
+        <p> <%=items[i].task%></p>
     </div>
+</form>
     <%}%>
 
     <form action="/" method="POST">
         <input type="text" placeholder="Enter Task" name="newItem" autocomplete="off">
-        <button type="submit">+</button>
+        <button type="submit" class="add">+</button>
     </form>
 </div>
 </body>

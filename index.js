@@ -23,17 +23,6 @@ const task2= new task({
     task:"sleep"
 });
 const tasks=[task1,task2];
-// task.insertMany(tasks,function(err)
-// {
-//     if(err)
-//     {
-//         console.log(err);
-//     }
-//     else
-//     {
-//         console.log("Inserted");
-//     }
-// });
 
 app.get("/",function(req,res)
 {
@@ -50,7 +39,7 @@ var items=[];
         else{
             for(var i=0;i<foundItems.length;i++)
             {
-            items.push(foundItems[i].task);
+            items.push(foundItems[i]);
             }
               res.render("index",{day:dayName,items:items});
         }
@@ -71,6 +60,19 @@ app.post("/",function(req,res)
         }
     });
     res.redirect("/");
+});
+app.post("/delete",function(req,res){
+    const itemChecked=req.body.checkbox;
+    task.deleteOne({ _id:itemChecked  }, function (err) {
+        if(err)
+        {
+            console.log(err);
+        }
+        else{
+            console.log("Deleted");
+        }
+        res.redirect("/");
+    });
 });
 app.listen(3000,function()
 {

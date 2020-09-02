@@ -12,17 +12,10 @@ const itemsSchema=new mongoose.Schema({
     task:{
         type:String,
         required:true
-    }
+    },
+    topic:String
 });
 const task=mongoose.model("Item",itemsSchema);
-const task1= new task({
-    task:"eat"
-
-});
-const task2= new task({
-    task:"sleep"
-});
-const tasks=[task1,task2];
 
 app.get("/",function(req,res)
 {
@@ -45,11 +38,46 @@ var items=[];
         }
     });
 });
+app.get("/:topic",function(req,res)
+{
+    var newtopic=req.params.topic;
+    console.log(newtopic);
+    var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+var d = new Date();
+var day=d.getDay();
+var dayName = days[d.getDay()];
+var items=[];
+const new_task=new task({
+    task:"sleep",
+    topic:newtopic
+});
+items.push(new_task);
+    task.find(function(err,foundItems){
+        if(err)
+        {
+            console.log(err);
+        }
+        else{
+            for(var i=0;i<foundItems.length;i++)
+            {
+                if(foundItems[i].topic==newtopic)
+                {
+            items.push(foundItems[i]);
+                }
+            }
+            console.log(items);
+              res.render("index",{day:dayName,items:items});
+        }
+    });
+});
 app.post("/",function(req,res)
 {
+    const topic=req.body.bt;
     var newItem=req.body.newItem;
+    var newtopic=req.body.bt;
     const new_task=new task({
-        task:newItem
+        task:newItem,
+        topic:newtopic
     });
     task.insertMany([new_task],function(err){
         if(err){
@@ -59,7 +87,7 @@ app.post("/",function(req,res)
             console.log("new item done");
         }
     });
-    res.redirect("/");
+    res.redirect("/" +topic);
 });
 app.post("/delete",function(req,res){
     const itemChecked=req.body.checkbox;
